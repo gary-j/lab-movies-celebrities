@@ -24,6 +24,9 @@ const capitalized = string => string[0].toUpperCase() + string.slice(1).toLowerC
 
 app.locals.title = `${capitalized(projectName)}- Generated with Ironlauncher`;
 
+// Make everything inside of public/ available
+app.use(express.static('public'));
+
 // 👇 Start handling routes here
 const index = require('./routes/index');
 app.use('/', index);
