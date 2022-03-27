@@ -8,3 +8,7 @@
     <li>{{this.name}} : {{this.occupation}} : {{catchPhrase}}</li>
     {{/each}}
 </p>
+
+<form action="/movies/{{theMovie._id}}/delete" method="post">
+    <input type="submit" value="Delete Movie">
+</form>

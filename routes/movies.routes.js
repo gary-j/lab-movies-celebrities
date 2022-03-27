@@ -32,7 +32,7 @@ router.post('/create', async (req, res, next)=>{
     try{
         const createdMovie = await Movie.create(movieToCreate)
 
-        res.render('./movies/movies')
+        res.redirect('/movies');
 
     }catch(err){
         next(err)
@@ -43,9 +43,6 @@ router.post('/create', async (req, res, next)=>{
 
 router.get('/:id', async(req, res, next)=>{
 
-
-    // console.log(movieId, 'MOVIE ID');
-   
     try{
     const movieId = req.params.id
     await Movie.findById(movieId).populate('cast')
@@ -54,11 +51,22 @@ router.get('/:id', async(req, res, next)=>{
         res.render('./movies/movie-details', {theMovie})
     })
 
-
-        // const theMovie = await Movie.findById(movieId).populate('cast')
-
-
     }catch(err){
+        next(err)
+    }
+})
+
+// D E L E T E  M O V I E
+router.post('/:id/delete', async (req, res, next)=>{
+
+    try{
+        await Movie.findByIdAndDelete(req.params.id)
+        .then(
+            // console.log('movie deleted !')
+            res.redirect('/movies')
+        )
+    }
+    catch(err){
         next(err)
     }
 })
