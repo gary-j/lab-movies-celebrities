@@ -1,0 +1,10 @@
+<p>test</p>
+
+<p> {{theMovie.title}} </p>
+<p>{{theMovie.genre}}</p>
+<p>{{theMovie.plot}}</p>
+<p>
+    {{#each theMovie.cast}}
+    <li>{{this.name}} : {{this.occupation}} : {{catchPhrase}}</li>
+    {{/each}}
+</p>

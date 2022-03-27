@@ -10,11 +10,11 @@ router.get("/", async (req, res, next)=>{
     console.log('I GOT A CELEBS IN THE DM !', allCelebs)
     // allCelebs to array from object for the view
 
-    res.render('../views/celebs/celebs.hbs', { allCelebs })
+    res.render('celebs/celebs', { allCelebs })
 })
 
 router.get("/create", (req, res, next)=>{
-    res.render('../views/celebs/new-celeb.hbs')
+    res.render('celebs/new-celeb')
 })
 
 router.post("/create", async (req, res, next)=>{
