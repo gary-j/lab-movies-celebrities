@@ -41,18 +41,53 @@ router.post('/create', async (req, res, next)=>{
 
 });
 
-router.get('/:id', async(req, res, next)=>{
+
+// Brian Valette's code idea
+// Get selected status on celebrities
+async function getCelebritiesWithSelectedStatus(movie) {
+	const celebrities = await Celebrity.find();
+	return celebrities.map(celeb => {
+		return {
+			isSelected: movie.cast.some(starId => starId.equals(celeb._id)),
+			data: celeb,
+		}
+	});
+}
+
+// E D I T I N G  M O V I E
+router.get('/:id/edit', async (req, res, next)=>{
 
     try{
-    const movieId = req.params.id
-    await Movie.findById(movieId).populate('cast')
-    .then((movie)=>{
-        const theMovie = movie
-        res.render('./movies/movie-details', {theMovie})
-    })
+
+      const movie = await Movie.findById(req.params.id)
+
+      const celebs = await getCelebritiesWithSelectedStatus(movie)
+
+        console.log(celebs, 'All celebs');
+
+        res.render('./movies/edit-movie', {movie, celebs} )
 
     }catch(err){
+        console.log(err, 'erreur');
         next(err)
+    }
+})
+
+router.post('/:id/edit', async (req, res, next)=>{
+    console.log(req.body, 'CE QU\'ENVOI LE FORMULAIRE');
+    const updatedMovie = req.body
+
+    try{
+
+        await Movie.findByIdAndUpdate(req.params.id, updatedMovie)
+        .then( (rep)=> console.log(rep, 'la réponse'))
+       
+        res.redirect(`/movies/${req.params.id}`)
+    }
+    catch(err){
+        console.log(err, 'erreur');
+        res.redirect(`/movies/${req.params.id}`)
+
     }
 })
 
@@ -67,6 +102,22 @@ router.post('/:id/delete', async (req, res, next)=>{
         )
     }
     catch(err){
+        next(err)
+    }
+})
+
+// En dernier pour éviter l'override
+router.get('/:id', async(req, res, next)=>{
+
+    try{
+    const movieId = req.params.id
+    await Movie.findById(movieId).populate('cast')
+    .then((movie)=>{
+        const theMovie = movie
+        res.render('./movies/movie-details', {theMovie})
+    })
+
+    }catch(err){
         next(err)
     }
 })
